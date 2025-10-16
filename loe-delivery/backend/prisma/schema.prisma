@@ -1,0 +1,55 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  orders    Order[]
+  Dish      Dish[]
+}
+
+model Dish {
+  id           Int         @id @default(autoincrement())
+  name         String
+  price        Float
+  category     String
+  video_url    String
+  restaurant   User        @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  orders       OrderDish[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  customer   User        @relation(fields: [customerId], references: [id])
+  customerId Int
+  status     String      @default("pending")
+  total      Float
+  createdAt  DateTime    @default(now())
+  dishes     OrderDish[]
+}
+
+model OrderDish {
+  id      Int   @id @default(autoincrement())
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int
+  dish    Dish  @relation(fields: [dishId], references: [id])
+  dishId  Int
+}
+
+enum Role {
+  CUSTOMER
+  RESTAURANT
+  ADMIN
+}
