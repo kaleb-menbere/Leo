@@ -1,10 +1,16 @@
 // routes/dish.js
 const express = require("express");
 const router = express.Router();
-const { createDish, getAllDishes } = require("../controllers/dishController");
+const { createDish, getAllDishes, getMyDishes } = require("../controllers/dishController");
 const verifyToken = require("../middleware/authMiddleware");
 
-router.post("/", verifyToken, createDish); // only logged-in users (restaurants)
-router.get("/", getAllDishes); // open to everyone
+// Create a dish (restaurant only)
+router.post("/", verifyToken, createDish);
+
+// Get all dishes (customers + admin)
+router.get("/", verifyToken, getAllDishes);
+
+// Get only restaurant's own dishes
+router.get("/my", verifyToken, getMyDishes);
 
 module.exports = router;
