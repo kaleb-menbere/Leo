@@ -9,7 +9,10 @@ app.use(express.json());
 
 // Routes
 const authRoutes = require("./routes/auth");
+const dishRoutes = require("./routes/dish"); // 👈 ADD THIS LINE
+
 app.use("/api/auth", authRoutes);
+app.use("/api/dishes", dishRoutes); // 👈 AND THIS LINE
 
 app.get("/", (req, res) => res.send("LOE Delivery API running 🚀"));
 
