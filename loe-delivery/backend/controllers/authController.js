@@ -37,10 +37,17 @@ exports.login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(401).json({ error: "Invalid password" });
 
+    const signOptions = {
+      expiresIn: process.env.JWT_EXPIRES || "1h",
+      algorithm: "HS256",
+    };
+    if (process.env.JWT_ISSUER) signOptions.issuer = process.env.JWT_ISSUER;
+    if (process.env.JWT_AUDIENCE) signOptions.audience = process.env.JWT_AUDIENCE;
+
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      signOptions
     );
 
     res.json({ message: "Login successful", token });
