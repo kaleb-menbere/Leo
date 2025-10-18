@@ -85,7 +85,8 @@ function CustomerDashboard() {
         {dishes.map((dish) => (
           <div key={dish.id} className="dish-card">
             <h4>{dish.name}</h4>
-            <p>${dish.price}</p>
+            <p className="muted">by {dish.restaurant?.name || "Restaurant"}</p>
+            <div className="badges"><span className="badge">{dish.category}</span><span className="badge price">${dish.price}</span></div>
             {dish.video_url && (
               <video width="240" controls src={dish.video_url} />
             )}

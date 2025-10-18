@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import RestaurantDashboard from "./pages/RestaurantDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminPanel from "./pages/AdminPanel";
 import Dishes from "./pages/Dishes";
 import MyOrders from "./pages/MyOrders";
 import AddDish from "./pages/AddDish";
@@ -52,6 +53,7 @@ function App() {
           {role === "ADMIN" && (
             <>
               <Link to="/admin">Analytics</Link>
+              <Link to="/admin/panel">Panel</Link>
               <button className="btn btn-logout" onClick={() => { logout(); window.location.assign("/"); }}>Logout</button>
             </>
           )}
@@ -69,6 +71,7 @@ function App() {
           <Route path="/restaurant/orders" element={<RestaurantOrders />} />
           <Route path="/customer" element={<CustomerDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/panel" element={<AdminPanel />} />
           <Route path="/dishes" element={<Dishes />} />
           <Route path="/orders" element={<MyOrders />} />
         </Routes>

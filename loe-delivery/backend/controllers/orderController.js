@@ -142,12 +142,23 @@ exports.updateOrderStatus = async (req, res) => {
       });
     }
 
-    await prisma.order.update({
+    // Enforce sequential transitions: pending -> accepted -> delivered
+    const current = order.status;
+    const isValidTransition =
+      (current === "pending" && status === "accepted") ||
+      (current === "accepted" && status === "delivered");
+
+    if (!isValidTransition) {
+      return res.status(400).json({ error: `Invalid transition from '${current}' to '${status}'` });
+    }
+
+    const updated = await prisma.order.update({
       where: { id: parseInt(id) },
       data: { status },
+      include: { dishes: { include: { dish: true } }, customer: { select: { name: true, email: true } } }
     });
 
-    res.json({ message: `Order status updated to ${status}` });
+    res.json({ message: `Order status updated to ${status}`, order: updated });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });

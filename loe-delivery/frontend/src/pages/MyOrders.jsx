@@ -20,6 +20,8 @@ function MyOrders() {
 
   useEffect(() => {
     fetchOrders();
+    const id = setInterval(fetchOrders, 5000);
+    return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -31,7 +33,11 @@ function MyOrders() {
         {orders.map((order) => (
           <div key={order.id} className="dish-card">
             <h4>Order #{order.id}</h4>
-            <p>Status: {order.status}</p>
+            <div className="status">
+              <span className={`pill ${order.status === "pending" ? "active" : "done"}`}>Pending</span>
+              <span className={`pill ${order.status === "accepted" ? "active" : order.status === "delivered" ? "done" : ""}`}>Accepted</span>
+              <span className={`pill ${order.status === "delivered" ? "active" : ""}`}>Delivered</span>
+            </div>
             <p>Total: ${order.total}</p>
             <ul>
               {order.dishes?.map((od) => (

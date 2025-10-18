@@ -6,6 +6,7 @@ function RestaurantOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [updatingOrderId, setUpdatingOrderId] = useState(null);
   const token = localStorage.getItem("token");
 
   const fetchOrders = async () => {
@@ -22,6 +23,7 @@ function RestaurantOrders() {
 
   const updateOrderStatus = async (id, status) => {
     setUpdating(true);
+    setUpdatingOrderId(id);
     try {
       const res = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
         method: "PATCH",
@@ -37,11 +39,14 @@ function RestaurantOrders() {
       }
     } finally {
       setUpdating(false);
+      setUpdatingOrderId(null);
     }
   };
 
   useEffect(() => {
     fetchOrders();
+    const id = setInterval(fetchOrders, 5000);
+    return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,10 +55,18 @@ function RestaurantOrders() {
       <h2 style={{ color: "#FF7A00", textAlign: "center" }}>Incoming Orders</h2>
       {loading ? <Loader text="Loading orders" /> : null}
       <div className="dish-list" style={{ marginTop: 12 }}>
-        {orders.map((order) => (
+        {orders.map((order) => {
+          const canAccept = order.status === "pending";
+          const canDeliver = order.status === "accepted";
+          const isUpdating = updating && updatingOrderId === order.id;
+          return (
           <div key={order.id} className="dish-card">
             <h4>Order #{order.id}</h4>
-            <p>Status: {order.status}</p>
+            <div className="status">
+              <span className={`pill ${order.status === "pending" ? "active" : "done"}`}>Pending</span>
+              <span className={`pill ${order.status === "accepted" ? "active" : order.status === "delivered" ? "done" : ""}`}>Accepted</span>
+              <span className={`pill ${order.status === "delivered" ? "active" : ""}`}>Delivered</span>
+            </div>
             <p>Total: ${order.total}</p>
             <ul>
               {order.dishes?.map((od) => (
@@ -61,11 +74,18 @@ function RestaurantOrders() {
               ))}
             </ul>
             <div>
-              <button disabled={updating} onClick={() => updateOrderStatus(order.id, "accepted")}>Accept</button>
-              <button disabled={updating} onClick={() => updateOrderStatus(order.id, "delivered")}>Mark Delivered</button>
+              {canAccept && (
+                <button disabled={isUpdating} onClick={() => updateOrderStatus(order.id, "accepted")}>{isUpdating ? "Accepting..." : "Accept"}</button>
+              )}
+              {canDeliver && (
+                <button disabled={isUpdating} onClick={() => updateOrderStatus(order.id, "delivered")}>{isUpdating ? "Delivering..." : "Mark Delivered"}</button>
+              )}
+              {order.status === "delivered" && (
+                <span className="muted">Completed</span>
+              )}
             </div>
           </div>
-        ))}
+        );})}
       </div>
     </div>
   );

@@ -8,6 +8,9 @@ function Dishes() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [quantities, setQuantities] = useState({}); // { [dishId]: number }
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("ALL");
+  const [sortBy, setSortBy] = useState("relevance");
   const token = localStorage.getItem("token");
 
   const fetchDishes = async () => {
@@ -69,12 +72,45 @@ function Dishes() {
   return (
     <div>
       <h2 style={{ color: "#FF7A00", textAlign: "center" }}>Browse Dishes</h2>
+      {/* Filters */}
+      <div className="filters-bar">
+        <input
+          className="input"
+          placeholder="Search dishes or restaurants"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="ALL">All Categories</option>
+          {[...new Set(dishes.map((d) => d.category))].map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+        <select className="input" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="relevance">Sort: Relevance</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+        </select>
+      </div>
+
       {loading ? <Loader text="Loading dishes" /> : null}
       <div className="dish-list" style={{ marginTop: 12 }}>
-        {dishes.map((dish) => (
+        {dishes
+          .filter((d) =>
+            (category === "ALL" || d.category === category) &&
+            (d.name.toLowerCase().includes(search.toLowerCase()) ||
+              (d.restaurant?.name || "").toLowerCase().includes(search.toLowerCase()))
+          )
+          .sort((a, b) => {
+            if (sortBy === "price_asc") return a.price - b.price;
+            if (sortBy === "price_desc") return b.price - a.price;
+            return 0;
+          })
+          .map((dish) => (
           <div key={dish.id} className="dish-card">
             <h4>{dish.name}</h4>
-            <p>${dish.price}</p>
+            <p className="muted">by {dish.restaurant?.name || "Restaurant"}</p>
+            <div className="badges"><span className="badge">{dish.category}</span><span className="badge price">${dish.price}</span></div>
             {dish.video_url && <video width="240" controls src={dish.video_url} />}
             <button onClick={() => toggleDish(dish)}>
               {selected.find((d) => d.id === dish.id) ? "Remove" : "Add to Order"}
