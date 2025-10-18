@@ -1,38 +1,235 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff;
+  color: #333;
+}
+
+.header {
+  background-color: #FF7A00;
+  color: white;
+  padding: 15px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.header nav a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.header nav a:hover {
+  text-decoration: underline;
+}
+
+.header nav .btn {
+  margin-left: 16px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.header nav .btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.btn-logout {
+  background: #222 !important;
+  border-color: #111 !important;
+}
+
+.main-content {
+  padding: 40px;
+}
+
+/* Form */
+.form-container {
+  background: white;
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+  text-align: center;
+  color: #FF7A00;
+  margin-bottom: 20px;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-container button {
+  width: 100%;
+  background: #FF7A00;
+  color: white;
+  padding: 10px;
+  border: none;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background: #e96b00;
+}
+
+/* Dish cards */
+.dish-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.dish-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 15px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.dish-card h4 {
+  color: #FF7A00;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.dish-card button {
+  background: #FF7A00;
+  border: none;
   color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  margin-top: 8px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.dish-card button:hover {
+  background: #e96b00;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Logo button */
+.logo-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Guest header layout: keep login/register on the left beside logo */
+.header.guest {
+  justify-content: space-between;
+}
+.header.guest .logo-btn {
+  margin-right: 0;
+}
+.header.guest nav a {
+  margin-left: 20px;
+  margin-right: 0;
+}
+
+/* Hero section */
+.hero {
+  background: linear-gradient(135deg, #ff7a00 0%, #ff9a3d 100%);
+  color: #fff;
+  padding: 60px 40px;
+  border-radius: 12px;
+}
+.hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+}
+.hero p {
+  font-size: 1.05rem;
+  opacity: 0.95;
+}
+.hero-actions {
+  margin-top: 18px;
+}
+.btn {
+  display: inline-block;
+  background: #fff;
+  color: #ff7a00;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  text-decoration: none;
+  font-weight: 700;
+  margin-right: 12px;
+}
+.btn:hover { opacity: 0.95; }
+.btn-outline {
+  background: transparent;
+  color: #fff;
+}
+
+/* Horizontal scroll row */
+.section { margin-top: 36px; }
+.section-title { color: #333; margin-bottom: 12px; }
+.scroll-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.scroll-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 16px;
+  min-height: 160px;
+}
+.thumb {
+  height: 100px;
+  background: #ffe3cc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Categories grid */
+.grid-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+.cat-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 18px;
+  text-align: center;
+  font-weight: 600;
 }
